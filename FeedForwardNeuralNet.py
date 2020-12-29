@@ -24,12 +24,22 @@ class FeedForwardNeuralNet:
         self.bias = None
 
 
+    def get_network_dict(self):
+        """
+        Function obtains a dictionary that defines the neural network.
+        The dict contains the weights and biases for the network and are updated during the training process.
+        """
+
+        # define layers as "hidden_layer_x" : [weight and biases in here]
+        pass
+
+
     def _forward(self, x):
-        fprop, _ = self.activation_function
-        output_layer = final_layer()
-        for index, layer in enumerate(range(self.num_units_per_hidden_layer)):
-            x = np.dot(self.weights[index].T, x) + self.bias[index]
-            x = fprop(self, x)
+        network_dict = FeedForwardNeuralNet.get_network_dict()
+        for layer in range(len(self.num_units_per_hidden_layer)):
+            # do fprop in here
+            # fprop, _ =
+            pass
 
         output = output_layer(x)
         return output
@@ -50,22 +60,6 @@ class FeedForwardNeuralNet:
         prediction = _forward(x)
         return prediction
 
-
-    def final_layer(self):
-        pass
-
-    def activation(self):
-        if self.activation_function == "ReLU":
-            fprop =
-            bprop =
-
-        elif self.activation() == "Sigmoid":
-            fprop =
-            bprop =
-        else:
-            assert "The activation function chosen is not available, please choose between ReLU or Sigmoid"
-
-        return fprop, bprop
 
 
 
