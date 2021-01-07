@@ -5,7 +5,7 @@ import output_layers
 
 class FeedForwardNeuralNet:
 
-    def __init__(self, network_shape, output_layer=None, activation_function="ReLU",  loss="cross_entropy",
+    def __init__(self, network_shape, output_layer="Linear", activation_function="ReLU",  loss="cross_entropy",
                  regularisation=None, batch_size=50):
         # network shape is a list containing the number of units per layer. This include the input and output dims.
         self.network_shape = network_shape
@@ -16,22 +16,8 @@ class FeedForwardNeuralNet:
         self.regularisation = regularisation
         self.batch_size = batch_size
         self.network_dict = {}
-        self._get_network_dict()
 
 
-    def _get_network_dict(self):
-        """
-        Function obtains a dictionary that defines the neural network.
-        The dict contains the weights and biases for the network and are updated during the training process.
-        """
-
-        for index in range(len(self.network_shape)-1):
-            layer_number = index + 1
-            matrix_input_size, matrix_output_size = self.network_shape[layer_number], self.network_shape[layer_number+1]
-            self.network_dict[f"hidden_layer_{index}"] = [self.init_weights(matrix_input_size, matrix_output_size),
-                                                     self.init_biases(matrix_input_size, matrix_output_size)]
-
-        # define layers as "hidden_layer_x" : [weight and biases in here]
 
     def _init_weights(self, input_size, output_size):
         # "He" initialisation - chosen because ReLU activation function is most likely to be used
@@ -48,26 +34,47 @@ class FeedForwardNeuralNet:
         return biases
 
 
+    def _get_network_dict(self):
+        """
+        Function obtains a dictionary that defines the neural network.
+        The dict contains the weights and biases for the network and are updated during the training process.
+        """
+        # TODO: change dictionary key for network_dict as it includes all layers not just hidden ones
+        input_dimensionality = self.network_shape[0]
+        for index in range(len(self.network_shape)-1):
+            layer_number = index + 1
+            matrix_input_size, matrix_output_size = self.network_shape[index], self.network_shape[index+1]
+            self.network_dict[f"hidden_layer_{layer_number}"] = [self._init_weights(matrix_input_size, matrix_output_size),
+                                                     self._init_biases(input_dimensionality, matrix_output_size)]
+
+        # define layers as "hidden_layer_x" : [weight and biases in here]
+
+
+
+
     def _fprop(self, data, weights, biases):
+        #print(data, weights, biases)
         output = np.dot(data, weights) + biases
         return output
 
     def _forward(self, x):
         output = x
-        for index in range(len(self.network_shape)):
+        for index in range(len(self.network_shape)-1):
             layer_number = index + 1
             weights, biases = self.network_dict[f"hidden_layer_{layer_number}"]
             output = self._fprop(output, weights, biases)
-            if index != range(len(self.network_shape)) - 1:
-                output = self.activation_function(output)
+            # don't want to apply activation function on final layer - using statement to check if this is last layer
+            if index != len(self.network_shape) - 2:
+                output = self.activation_function.fprop(output)
 
         # final layer requires different activation function depending on output
-        output = self.output_layer(x)
+        output = self.output_layer(output)
         return output
 
 
 
     def train(self, x, y):
+        self._get_network_dict()
         output = self._forward(x)
         loss = self.loss(output, y)
         #update_weights(loss)
@@ -80,6 +87,12 @@ class FeedForwardNeuralNet:
     def predict(self, x):
         prediction = self._forward(x)
         return prediction
+
+    
+# little test to see if the fprop is working
+if __name__ == "__main__":
+    model = FeedForwardNeuralNet(network_shape=[1,5,20,1])
+    model.train([1],[1])
 
 
 

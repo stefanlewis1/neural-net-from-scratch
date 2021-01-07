@@ -4,8 +4,8 @@ class ReLU:
     def __init__(self):
         pass
 
-    def fprop(self):
-        return np.max(0,1)
+    def fprop(self, x):
+        return np.maximum(0,x)
 
     def bprop(self, gradients):
         if gradients > 0:

@@ -16,9 +16,9 @@ def define_loss_function(loss_function_string):
         f"Activation function selected is not available. Please choose from {available_loss_functions}"
 
     if loss_function_string == "MSE":
-        loss_function = mean_square_error()
+        loss_function = mean_square_error
     elif loss_function_string == "cross_entropy":
-        loss_function = cross_entropy_error()
+        loss_function = cross_entropy_error
 
     return loss_function
 
