@@ -39,21 +39,18 @@ class FeedForwardNeuralNet:
         Function obtains a dictionary that defines the neural network.
         The dict contains the weights and biases for the network and are updated during the training process.
         """
-        # TODO: change dictionary key for network_dict as it includes all layers not just hidden ones
+        
         input_dimensionality = self.network_shape[0]
         for index in range(len(self.network_shape)-1):
             layer_number = index + 1
             matrix_input_size, matrix_output_size = self.network_shape[index], self.network_shape[index+1]
-            self.network_dict[f"hidden_layer_{layer_number}"] = [self._init_weights(matrix_input_size, matrix_output_size),
+            self.network_dict[f"layer_{layer_number}"] = [self._init_weights(matrix_input_size, matrix_output_size),
                                                      self._init_biases(input_dimensionality, matrix_output_size)]
-
-        # define layers as "hidden_layer_x" : [weight and biases in here]
 
 
 
 
     def _fprop(self, data, weights, biases):
-        #print(data, weights, biases)
         output = np.dot(data, weights) + biases
         return output
 
@@ -61,7 +58,7 @@ class FeedForwardNeuralNet:
         output = x
         for index in range(len(self.network_shape)-1):
             layer_number = index + 1
-            weights, biases = self.network_dict[f"hidden_layer_{layer_number}"]
+            weights, biases = self.network_dict[f"layer_{layer_number}"]
             output = self._fprop(output, weights, biases)
             # don't want to apply activation function on final layer - using statement to check if this is last layer
             if index != len(self.network_shape) - 2:
@@ -88,7 +85,7 @@ class FeedForwardNeuralNet:
         prediction = self._forward(x)
         return prediction
 
-    
+
 # little test to see if the fprop is working
 if __name__ == "__main__":
     model = FeedForwardNeuralNet(network_shape=[1,5,20,1])
