@@ -19,11 +19,12 @@ def define_output_layer(output_layer):
 def output_linear(x):
     return x
 
-def output_sigmoid():
-    pass
+def output_sigmoid(x):
+    return 1/(1+np.exp(-x))
 
 def output_softmax():
-    pass
+    exp_x = np.exp(x)
+    return (exp_x.T / np.sum(exp_x, axis=1)).T
 
 
 
