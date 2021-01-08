@@ -1,12 +1,11 @@
 import numpy as np
 
 def mean_square_error(prediction, y):
-    loss = np.sqrt((prediction - y)**2)
+    loss = ((prediction - y)**2) / len(prediction)
     return loss
 
 def cross_entropy_error(prediction, y):
-    loss = -np.sum([prediction[i] * np.log2(y[i]) for i in range(len(y))])
-    return loss
+    return -np.sum(y * np.log2(prediction))
 
 
 def define_loss_function(loss_function_string):
