@@ -3,15 +3,15 @@
 
 
 def define_output_layer(output_layer):
-    available_output_layers = ["Linear", "Sigmoid", "Softmax"]
+    available_output_layers = ["linear", "sigmoid", "softmax"]
     assert output_layer in available_output_layers, \
         f"Output layer selected is not available. Please choose from {available_output_layers}"
 
-    if output_layer == "Linear":
+    if output_layer == "linear":
         output_layer = output_linear
-    elif output_layer == "Sigmoid":
+    elif output_layer == "sigmoid":
         output_layer = output_sigmoid
-    elif output_layer == "Softmax":
+    elif output_layer == "softmax":
         output_layer = output_softmax
 
     return output_layer

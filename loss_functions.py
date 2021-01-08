@@ -11,11 +11,11 @@ def cross_entropy_error(prediction, y):
 
 def define_loss_function(loss_function_string):
 
-    available_loss_functions = ["MSE", "cross_entropy"]
+    available_loss_functions = ["mse", "cross_entropy"]
     assert loss_function_string in available_loss_functions,\
         f"Activation function selected is not available. Please choose from {available_loss_functions}"
 
-    if loss_function_string == "MSE":
+    if loss_function_string == "mse":
         loss_function = mean_square_error
     elif loss_function_string == "cross_entropy":
         loss_function = cross_entropy_error

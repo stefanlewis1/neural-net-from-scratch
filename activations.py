@@ -19,13 +19,13 @@ class Sigmoid:
 
 def define_activation_function(activation_function):
 
-    available_activation_functions = ["ReLU", "Sigmoid"]
+    available_activation_functions = ["relu", "sigmoid"]
     assert activation_function in available_activation_functions, \
             f"Activation function selected is not available. Please choose from {available_activation_functions}"
 
-    if activation_function == "ReLU":
+    if activation_function == "relu":
         activation_function = ReLU()
-    elif activation_function == "Sigmoid":
+    elif activation_function == "sigmoid":
         activation_function = Sigmoid()
 
     return activation_function
