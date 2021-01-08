@@ -1,8 +1,6 @@
 import numpy as np
 
 class ReLU:
-    def __init__(self):
-        pass
 
     def fprop(self, x):
         return np.maximum(0,x)
@@ -14,7 +12,13 @@ class ReLU:
             return 0
 
 class Sigmoid:
-    pass
+
+    def fprop(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def bprop(self, gradients):
+        return self.fprop(gradients) * (1 - self.fprop(gradients))
+
 
 
 def define_activation_function(activation_function):
