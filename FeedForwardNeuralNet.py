@@ -5,7 +5,7 @@ import output_layers
 
 class FeedForwardNeuralNet:
 
-    def __init__(self, network_shape, output_layer="linear", activation_function="relu",  loss="cross_entropy",
+    def __init__(self, network_shape, output_layer="linear", activation_function="relu",  loss="mse",
                  regularisation=None, batch_size=50):
         # network shape is a list containing the number of units per layer. This include the input and output dims.
         self.network_shape = network_shape
@@ -73,13 +73,15 @@ class FeedForwardNeuralNet:
 
     def train(self, x, y):
         output = self._forward(x)
-        loss = self.loss(output, y)
+        # TODO: need to ensure output layer is sigmoid/softmax when using cross_entropy loss
+        loss = self.loss.mean_square_error(output, y)
+        print(loss)
         #update_weights(loss)
         return output
 
     def test(self, x, y):
         prediction = self._forward(x)
-        loss = self.loss(prediction, y)
+        loss = self.loss.mean_square_error(prediction, y)
 
 
     def predict(self, x):

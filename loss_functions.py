@@ -1,11 +1,21 @@
 import numpy as np
 
-def mean_square_error(prediction, y):
-    loss = ((prediction - y)**2) / len(prediction)
-    return loss
 
-def cross_entropy_error(prediction, y):
-    return -np.sum(y * np.log2(prediction))
+class mean_square:
+
+    def mean_square_error(self, prediction, y):
+        loss = ((prediction - y)**2) / len(prediction)
+        return loss
+
+    # TODO: need to work out gradients and backprop
+
+class cross_entropy:
+
+    def cross_entropy_error(self, prediction, y):
+        return -np.sum(y * np.log2(prediction))
+
+    # TODO: need to work out gradients and backprop
+
 
 
 def define_loss_function(loss_function_string):
@@ -15,9 +25,9 @@ def define_loss_function(loss_function_string):
         f"Activation function selected is not available. Please choose from {available_loss_functions}"
 
     if loss_function_string == "mse":
-        loss_function = mean_square_error
+        loss_function = mean_square
     elif loss_function_string == "cross_entropy":
-        loss_function = cross_entropy_error
+        loss_function = cross_entropy
 
     return loss_function
 
