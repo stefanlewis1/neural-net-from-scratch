@@ -4,9 +4,39 @@ import activations
 import output_layers
 
 class FeedForwardNeuralNet:
+    """ Feed forward neural network object which can train or predict in one line of code """
 
-    def __init__(self, network_shape, output_layer="linear", activation_function="relu",  loss="mse",
-                 regularisation=None, batch_size=50):
+    def __init__(self, network_shape, output_layer="linear", activation_function="relu",  loss="sum_of_squares",
+                 regularisation=0):
+        """Create a new neural network instance.
+
+        :param network_shape: the shape of the network defined by a list.
+        Each entry in the list is a layer while its value is the number of units in said layer.
+        Note - network_shape must include input and output layers/dimensions
+        :type network_shape: list
+
+        :param output_layer: string input to determine the final layer type. Can currently choose from linear, sigmoid
+        or softmax
+        :type output_layer: str
+
+        :param activation_function: string input to determine the activation function that will be used on all but the
+        output layer. Can currently choose from relu or sigmoid.
+        :type activation_function: str
+
+        :param loss: string input to determine which loss function will be used. Can currently choose from
+        sum_of_squares or cross_entropy.
+        :type loss: str
+
+        :param regularisation: float input to determine lambda parameter for the L2 regularisation. Default is 0.
+        :type regularisation: float
+
+        Example:
+
+            model = FeedForwardNeuralNetwork(network_shape=[784,100,100,10])
+            model.train(x, y, epochs=10)
+            model.predict(new_data_point)
+
+        """
         # network shape is a list containing the number of units per layer. This include the input and output dims.
         self.network_shape = network_shape
         self.output_layer = output_layers.define_output_layer(output_layer)
@@ -14,12 +44,25 @@ class FeedForwardNeuralNet:
         self.loss = loss_functions.define_loss_function(loss)
         # TODO: link regularisation directly into loss function
         self.regularisation = regularisation
-        self.batch_size = batch_size
         self.network_dict = self._get_network_dict()
 
 
 
     def _init_weights(self, input_size, output_size):
+        """
+        Function to initialise weights of the network using 'He' intialisation. 'He' method chosen due to effectiveness
+        with ReLU activation function. For more information see https://cs231n.github.io/neural-networks-2/.
+
+        :param input_size: input size of the layer
+        :type input_size: int
+
+        :param output_size: output size of the later
+        :type output_size: int
+
+        :return: weights for a given layer
+        :rtype: ndarray
+
+        """
         # "He" initialisation chosen because ReLU activation function works best with He initialisation.
         # ReLU is most likely activation function to be used.
         # For more details on "He" init see: https://cs231n.github.io/neural-networks-2/
@@ -28,7 +71,19 @@ class FeedForwardNeuralNet:
         return weights
 
     def _init_biases(self, input_size, output_size):
-        # Can intialise biases to zero. See Stanford notes for more detail: https://cs231n.github.io/neural-networks-2/
+        """
+        Function to intialise the biases of the network. All intialised to zero, for more information see:
+        https://cs231n.github.io/neural-networks-2//
+
+        :param input_size: input size of layer
+        :type input_size: int
+
+        :param output_size: output size of layer
+        :type output_size: int
+
+        :return: biases for a given layer
+        :rtype: ndarray
+        """
 
         biases = np.zeros((input_size, output_size))
         return biases
@@ -36,9 +91,15 @@ class FeedForwardNeuralNet:
 
     def _get_network_dict(self):
         """
-        Function obtains a dictionary that defines the neural network.
-        The dict contains the weights and biases for the network and are updated during the training process.
+        Function that obtains a dictionary that defines the neural network.
+        The dict contains the weights and biases for the network which are updated during the training process.
+
+
+        :return: dictionary containg parmeters of the model
+        :rtype: dict
         """
+
+
         network_dict = {}
         input_dimensionality = self.network_shape[0]
         for index in range(len(self.network_shape)-1):
@@ -51,6 +112,21 @@ class FeedForwardNeuralNet:
 
 
     def _fprop(self, data, weights, biases):
+        """
+        Function to provide a single affine transformation to the data input using network parameters.
+
+        :param data: input data that will be pass forward through the transformation
+        :type data: ndarray
+
+        :param weights: weights for the given layer
+        :type weights: ndarray
+
+        :param biases: biases for the given layer
+        :type biases: ndarray
+
+        :return: output of the data after affine transformation
+        :rtype: ndarray
+        """
         output = np.dot(data, weights) + biases
         return output
 
@@ -71,17 +147,16 @@ class FeedForwardNeuralNet:
 
 
 
-    def train(self, x, y):
+    def train(self, x, y, epochs=100, batch_size=50):
         output = self._forward(x)
         # TODO: need to ensure output layer is sigmoid/softmax when using cross_entropy loss
-        loss = self.loss.mean_square_error(output, y)
-        print(loss)
+        loss = self.loss.error(output, y)
         #update_weights(loss)
         return output
 
     def test(self, x, y):
         prediction = self._forward(x)
-        loss = self.loss.mean_square_error(prediction, y)
+        loss = self.loss.error(prediction, y)
 
 
     def predict(self, x):
@@ -91,8 +166,8 @@ class FeedForwardNeuralNet:
 
 # little test to see if the fprop is working
 if __name__ == "__main__":
-    model = FeedForwardNeuralNet(network_shape=[1,5,20,1])
-    out = model.train([1],[1])
+    model = FeedForwardNeuralNet(network_shape=[2,5,20,1])
+    out = model.train([[1,1],[2,2]],[[1],[2]])
     print(out)
 
 
