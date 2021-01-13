@@ -95,7 +95,7 @@ class FeedForwardNeuralNet:
         The dict contains the weights and biases for the network which are updated during the training process.
 
 
-        :return: dictionary containg parmeters of the model
+        :return: dictionary containing parameters of the model
         :rtype: dict
         """
 
@@ -172,7 +172,7 @@ class FeedForwardNeuralNet:
 
         :param batch_size: the number of data points used in one iteration of training. Default batch size is 1
         :type batch_size: int
-        
+
         :return: None
         """
         output = self._forward(data)
