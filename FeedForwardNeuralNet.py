@@ -157,10 +157,27 @@ class FeedForwardNeuralNet:
 
 
 
-    def train(self, x, y, epochs=100, batch_size=50):
-        output = self._forward(x)
+    def train(self, data, targets, epochs=100, batch_size=1):
+        """
+        Train the neural network using the data input and targets by calling this function.
+
+        :param data: input data to the model
+        :type data: ndarray
+
+        :param targets: corresponding labels to the data input
+        :type targets: ndarray
+
+        :param epochs: number of times the data will be iterated over during training. Default is 100 epochs
+        :type epochs: int
+
+        :param batch_size: the number of data points used in one iteration of training. Default batch size is 1
+        :type batch_size: int
+        
+        :return: None
+        """
+        output = self._forward(data)
         # TODO: need to ensure output layer is sigmoid/softmax when using cross_entropy loss
-        loss = self.loss.error(output, y)
+        loss = self.loss.error(output, targets)
         #update_weights(loss)
         return output
 
