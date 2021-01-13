@@ -131,7 +131,17 @@ class FeedForwardNeuralNet:
         return output
 
     def _forward(self, x):
-        # TODO: check why output is coming out as a nested array
+        """
+        Forward pass through the neural network. Calling this function will take the data - x - and forward propagate
+        it through the network.
+
+        :param x: data input that is forward propagated through the network.
+        :type x: ndarray
+
+        :return: network prediction using the data input
+        :rtype: ndarray
+        """
+
         output = x
         for index in range(len(self.network_shape)-1):
             layer_number = index + 1
